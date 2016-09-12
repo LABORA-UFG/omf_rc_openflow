@@ -1,0 +1,34 @@
+#pubsub details
+:pubsub:
+  :protocol: xmpp
+  :username: frisbee_proxy
+  :password: pw
+  :server: localhost
+
+# URL for the rest interface of the broker
+:broker_url: https://localhost:8001
+
+#operation Mode for OmfCommon.init (development, production, etc)
+:operationMode: development
+
+#testbed pubsub topic
+:testbedTopic: am_controller
+
+#testbed domain (resources with other domains will be ignored unless if this has the value 'ALL')
+:testbedDomain: omf:testserver
+
+#The default arguments of the communication between this resource and the ovsdb-server
+:ovs:
+  :ovsdb_server_host: "localhost"
+  :ovsdb_server_port: "6635"
+  :ovsdb_server_socket: "/var/run/openvswitch/db.sock"
+
+  #default "unix", between "tcp" and "unix"
+  :ovsdb_server_conn: "unix"
+
+  :ovs_vswitchd_pid: "/var/run/openvswitch/ovs-vswitchd.pid"
+
+  :ovs_vswitchd_socket: "/var/run/openvswitch/ovs-vswitchd.%s.ctl"
+
+  #default "unix", between "tcp" and "unix"
+  :ovs_vswitchd_conn: "unix"

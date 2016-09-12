@@ -4,6 +4,10 @@
 module OmfRc::ResourceProxy::VirtualOpenflowSwitch
   include OmfRc::ResourceProxyDSL
 
+  @config = YAML.load_file('/etc/omf_rc/ovs_conf.yaml')
+
+  @ovs = @config['ovs']
+
   register_proxy :virtual_openflow_switch, :create_by => :virtual_openflow_switch_factory
 
   utility :virtual_openflow_switch_tools
@@ -13,6 +17,8 @@ module OmfRc::ResourceProxy::VirtualOpenflowSwitch
 
   # Before release, the related ovsdb-server instance should also remove the corresponding switch
   hook :before_release do |resource|
+    resource.property.uuid = $UUID
+    info "\n\n------------------------------#{resource.property.uuid}\n\n"
     arguments = {
       "method" => "transact",
       "params" => [ "Open_vSwitch",
@@ -36,11 +42,12 @@ module OmfRc::ResourceProxy::VirtualOpenflowSwitch
                   ],
       "id" => "remove-switch"
     }
-    resource.ovs_connection("ovsdb-server", arguments)
+    result = resource.ovs_connection("ovsdb-server", arguments)["result"]
+    #raise "The removal of the switch ports faced a problem: #{result}" if result.to_s.include?('error')
   end
 
 
-  # Add/remove ports to this switch
+  # Add/remove port
   configure :ports do |resource, array_parameters|
     array_parameters = [array_parameters] if !array_parameters.kind_of?(Array)
     array_parameters.each do |parameters|
@@ -51,7 +58,7 @@ module OmfRc::ResourceProxy::VirtualOpenflowSwitch
           "params" => [ "Open_vSwitch",
                         { "op" => "insert",
                           "table" => "Interface",
-                          "row" => {"name" => parameters.name, "type" => parameters.type},
+                          "row" => {"name" => parameters.name},
                           "uuid-name" => "new_interface"
                         },
                         { "op" => "insert",
@@ -75,6 +82,33 @@ module OmfRc::ResourceProxy::VirtualOpenflowSwitch
     resource.ports
   end
 
+  # Request port information (XXX: very restrictive, just to support our case)
+  request :port do |resource, parameters|
+    arguments = {
+      "method" => parameters.information,
+      "params" => [parameters.name],
+      "id" => "port-info"
+    }
+    resource.ovs_connection("ovs-vswitchd", arguments)["result"]
+  end
+
+  # Configure port (XXX: very restrictive, just to support our case)
+  configure :port do |resource, parameters|
+    arguments = {
+      "method" => "transact",
+      "params" => [ "Open_vSwitch",
+                    { "op" => "mutate",
+                      "table" => "Interface",
+                      "where" => [["name", "==", parameters.name]],
+                      "mutations" => [["options", "insert", ["map", 
+                         [["remote_ip", parameters.remote_ip], ["remote_port", parameters.remote_port.to_s]]]]]
+                    }
+                  ],
+      "id" => "configure-port"
+    }
+    resource.ovs_connection("ovsdb-server", arguments)["result"]
+  end
+
   # Request tunnel port numbers of this switch
   request :tunnel_port_numbers do |resource|
     ports = resource.ports("tunnel")
@@ -88,6 +122,10 @@ module OmfRc::ResourceProxy::VirtualOpenflowSwitch
     end
     Hashie::Mash.new(Hash[port_num])
   end
+
+  #configure :name do |resource, parameters|
+  #  :name = parameters.name
+  #end
 
   # Configure tunnel ports
   configure :tunnel_port do |resource, parameters|

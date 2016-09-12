@@ -1,3 +1,3 @@
 module OmfRcOpenflow
-  VERSION = "6.0.0.pre.3"
+  VERSION = "6.2.4"
 end

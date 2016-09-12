@@ -3,17 +3,11 @@
 module OmfRc::ResourceProxy::VirtualOpenflowSwitchFactory
   include OmfRc::ResourceProxyDSL
 
-  # The default arguments of the communication between this resource and the ovsdb-server
-  OVS_CONNECTION_DEFAULTS = {
-    ovsdb_server_host:   "localhost",
-    ovsdb_server_port:   "6635",
-    ovsdb_server_socket: "/usr/local/var/run/openvswitch/db.sock",
-    ovsdb_server_conn:   "unix", # default "unix", between "tcp" and "unix"
-    ovs_vswitchd_pid:    "/usr/local/var/run/openvswitch/ovs-vswitchd.pid",
-    ovs_vswitchd_socket: "/usr/local/var/run/openvswitch/ovs-vswitchd.%s.ctl",
-    ovs_vswitchd_conn:   "unix" #default "unix", between "tcp" and "unix"
-  }
+  @config = YAML.load_file('/etc/omf_rc/ovs_conf.yaml')
 
+  @ovs = @config['ovs']
+
+  $UUID = ""
 
   register_proxy :virtual_openflow_switch_factory
 
@@ -25,23 +19,28 @@ module OmfRc::ResourceProxy::VirtualOpenflowSwitchFactory
     if type.to_sym != :virtual_openflow_switch
       raise "This resource doesn't create resources of type "+type
     end
-    #opts = Hashie::Mash.new(opts)
     arguments = {
       "method" => "transact",
       "params" => [ "Open_vSwitch",
                     { "op" => "insert",
                       "table" => "Interface",
-                      "row" => {"name" => opts.name.to_s, "type" => "internal"},
+                      "row" => {"name" => opts[:name], "type" => "internal"},
                       "uuid-name" => "new_interface"
                     },
                     { "op" => "insert",
                       "table" => "Port",
-                      "row" => {"name" => opts.name.to_s, "interfaces" => ["named-uuid", "new_interface"]},
+                      "row" => {"name" => opts[:name], "interfaces" => ["named-uuid", "new_interface"]},
                       "uuid-name" => "new_port"
                     },
                     { "op" => "insert",
+                      "table" => "Controller",
+                      "row" => {"target" => "tcp:127.0.0.1:6633"},
+                      "uuid-name" => "new_controller"
+                    },
+                    { "op" => "insert",
                       "table" => "Bridge",
-                      "row" => {"name" => opts.name.to_s, "ports" => ["named-uuid", "new_port"], "datapath_type" => "netdev"},
+                      "row" => {"name" => opts[:name], "ports" => ["named-uuid", "new_port"], "datapath_type" => "netdev", "fail_mode" => "secure",
+                                "controller" => ["named-uuid", "new_controller"]},
                       "uuid-name" => "new_bridge"
                     },
                     { "op" => "mutate",
@@ -53,29 +52,30 @@ module OmfRc::ResourceProxy::VirtualOpenflowSwitchFactory
       "id" => "add-switch"
     }
     result = resource.ovs_connection("ovsdb-server", arguments)["result"]
-    raise "The requested switch already existed in ovsdb-server or other problem" if result[4]
-    opts.property ||= Hashie::Mash.new
-    opts.property.provider = ">> #{resource.uid}"
-    opts.property.ovs_connection_args = resource.property.ovs_connection_args
-    opts.property.uuid = result[2]["uuid"][1]
+    raise "The requested switch already existed in ovsdb-server or other problem" if result.to_s.include?("error")
+    opts[:property] ||= Hashie::Mash.new
+    opts[:property].provider = ">> #{resource.uid}"
+    opts[:property].ovs_connection_args = @ovs
+    opts[:property].uuid = result[2]["uuid"][1]
+    $UUID = result[2]["uuid"][1]
   end
 
   # A new resource uses the default connection arguments (ip adress, port, socket, etc) to connect with a ovsdb-server instance
   hook :before_ready do |resource|
-    resource.property.ovs_connection_args = OVS_CONNECTION_DEFAULTS
+    @ovs = OVS_CONNECTION_DEFAULTS
   end
 
 
   # Configures the ovsdb-server connection arguments (ip adress, port, socket, etc)
   configure :ovs_connection do |resource, ovs_connection_args|
     raise "Connection with a new ovsdb-server instance is not allowed if there exist created switches" if !resource.children.empty?
-    resource.property.ovs_connection_args.update(ovs_connection_args)
+    @ovs.update(ovs_connection_args)
   end
 
 
   # Returns the ovsdb-server connection arguments (ip adress, port, socket, etc)
   request :ovs_connection do |resource|
-    resource.property.ovs_connection_args
+    @ovs
   end
 
   # Returns a list of virtual openflow switches, that correspond to the ovsdb-server bridges.

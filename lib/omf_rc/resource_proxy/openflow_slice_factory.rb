@@ -3,26 +3,9 @@
 module OmfRc::ResourceProxy::OpenflowSliceFactory
   include OmfRc::ResourceProxyDSL
 
-  # The default arguments of the communication between this resource and the flowvisor instance
-  FLOWVISOR_CONNECTION_DEFAULTS = {
-    host:       "localhost",
-    path:       "/xmlrc",
-    port:       "8080",
-    proxy_host: nil,
-    proxy_port: nil,
-    user:       "fvadmin",
-    password:   "openflow",
-    use_ssl:    "true",
-    timeout:    nil
-  }
+  @config = YAML.load_file('/etc/omf_rc/flowvisor_conf.yaml')
 
-  # The default parameters of a new slice. The openflow controller is assumed to be in the same working station with flowvisor instance
-  SLICE_DEFAULTS = {
-    passwd: "1234",
-    url:    "tcp:127.0.0.1:9933",
-    email:  "nothing@nowhere"
-  }
-
+  @flowvisor = @config['flowvisor']
 
   register_proxy :openflow_slice_factory
 
@@ -33,14 +16,14 @@ module OmfRc::ResourceProxy::OpenflowSliceFactory
   hook :before_create do |resource, type, opts|
     if type.to_sym != :openflow_slice
       raise "This resource doesn't create resources of type "+type
-    elsif opts.name == nil
+    elsif opts[:name] == nil
       raise "The created slice must be configured with a name"
     end
     #opts = Hashie::Mash.new(opts)
-    resource.flowvisor_connection.call("api.createSlice", opts.name.to_s, *SLICE_DEFAULTS.values)
-    opts.property ||= Hashie::Mash.new
-    opts.property.provider = ">> #{resource.uid}"
-    opts.property.flowvisor_connection_args = resource.property.flowvisor_connection_args
+    resource.flowvisor_connection.call("api.createSlice", opts[:name].to_s, *SLICE_DEFAULTS.values)
+    opts[:property] ||= Hashie::Mash.new
+    opts[:property].provider = ">> #{resource.uid}"
+    opts[:property].flowvisor_connection_args = resource.property.flowvisor_connection_args
   end
 
   # A new resource uses the default connection arguments (ip adress, port, etc) to connect with a flowvisor instance
