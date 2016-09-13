@@ -89,7 +89,7 @@ OmfCommon.init(options[:environment].to_sym, common_options) do |el|
 
   OmfCommon.comm.on_connected do |comm|
     info "Connected as #{comm.jid}" if comm.jid
-    res = OmfRc::ResourceFactory.create(:virtual_openflow_switch_factory, resource_options)
+    res = OmfRc::ResourceFactory.create(:ovs_proxy_factory, resource_options)
 
     comm.on_interrupted { res.disconnect }
   end

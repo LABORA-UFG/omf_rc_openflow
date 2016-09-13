@@ -7,14 +7,14 @@ module OmfRc::ResourceProxy::FlowvisorFactory
 
   @flowvisor = @config['flowvisor']
 
-  register_proxy :openflow_slice_factory
+  register_proxy :flowvisor_proxy_factory
 
   utility :openflow_slice_tools
 
 
   # Checks if the created child is an :openflow_slice resource and passes the connection arguments that are essential for the connection with flowvisor instance
   hook :before_create do |resource, type, opts|
-    if type.to_sym != :openflow_slice
+    if type.to_sym != :flowvisor_proxy
       raise "This resource doesn't create resources of type "+type
     elsif opts[:name] == nil
       raise "The created slice must be configured with a name"

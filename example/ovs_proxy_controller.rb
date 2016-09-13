@@ -32,7 +32,7 @@ OmfCommon.init(op_mode, opts) do |el|
   OmfCommon.comm.on_connected do |comm|
     info ">>> Starting ovs"
 
-    ovs = OmfRc::ResourceFactory.new(:virtual_openflow_switch_factory, opts.merge(uid: 'ovs'))
+    ovs = OmfRc::ResourceFactory.new(:ovs_proxy_factory, opts.merge(uid: 'ovs'))
 
     # Disconnect garage from XMPP server, when INT or TERM signals received
     comm.on_interrupted { ovs.disconnect }

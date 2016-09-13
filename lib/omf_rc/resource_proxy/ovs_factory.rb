@@ -9,14 +9,14 @@ module OmfRc::ResourceProxy::OvsFactory
 
   $UUID = ""
 
-  register_proxy :virtual_openflow_switch_factory
+  register_proxy :ovs_proxy_factory
 
   utility :virtual_openflow_switch_tools
 
 
-  # Checks if the created child is an :virtual_openflow_switch resource and passes the connection arguments
+  # Checks if the created child is an :ovs_proxy resource and passes the connection arguments
   hook :before_create do |resource, type, opts|
-    if type.to_sym != :virtual_openflow_switch
+    if type.to_sym != :ovs_proxy
       raise "This resource doesn't create resources of type "+type
     end
     arguments = {

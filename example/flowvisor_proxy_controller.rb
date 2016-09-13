@@ -32,7 +32,7 @@ OmfCommon.init(op_mode, opts) do |el|
   OmfCommon.comm.on_connected do |comm|
     info ">>> Starting flowvisor"
 
-    flowvisor = OmfRc::ResourceFactory.new(:openflow_slice_factory, opts.merge(uid: 'flowvisor'))
+    flowvisor = OmfRc::ResourceFactory.new(:flowvisor_proxy_factory, opts.merge(uid: 'flowvisor'))
 
     # Disconnect garage from XMPP server, when INT or TERM signals received
     comm.on_interrupted { flowvisor.disconnect }

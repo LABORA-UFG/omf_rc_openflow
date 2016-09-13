@@ -1,7 +1,7 @@
 # OMF_VERSIONS = 6.0
 
 def create_switch(ovs)
-  ovs.create(:virtual_openflow_switch, {name: "test"}) do |reply_msg|
+  ovs.create(:ovs_proxy, {name: "test"}) do |reply_msg|
     if reply_msg.success?
       switch = reply_msg.resource
 

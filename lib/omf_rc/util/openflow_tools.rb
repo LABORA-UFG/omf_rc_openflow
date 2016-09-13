@@ -68,7 +68,7 @@ module OmfRc::Util::OpenflowTools
       end
       hash
     end
-    result.delete_if {|hash| hash["slice"] != resource.property.name} if resource.type.to_sym == :openflow_slice
+    result.delete_if {|hash| hash["slice"] != resource.property.name} if resource.type.to_sym == :flowvisor_proxy
     FLOW_FEATURES.each do |feature|
       result.delete_if {|hash| hash[feature] != filter[feature].to_s} if filter[feature]
     end if filter

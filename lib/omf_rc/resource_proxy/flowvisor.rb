@@ -1,4 +1,4 @@
-# This resource is created from the parent :openflow_slice_factory resource.
+# This resource is created from the parent :flowvisor_proxy_factory resource.
 # It is related with a slice of a flowvisor instance, and behaves as a proxy between experimenter and the actual flowvisor slice.
 #
 module OmfRc::ResourceProxy::Flowvisor
@@ -8,7 +8,7 @@ module OmfRc::ResourceProxy::Flowvisor
 
   @flowvisor = @config['flowvisor']
 
-  register_proxy :openflow_slice, :create_by => :openflow_slice_factory
+  register_proxy :flowvisor_proxy, :create_by => :flowvisor_proxy_factory
 
   utility :openflow_slice_tools
 

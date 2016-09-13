@@ -1,4 +1,4 @@
-# This resource is created from the parent :virtual_openflow_switch_factory resource.
+# This resource is created from the parent :ovs_proxy_factory resource.
 # It is related with a bridge of an ovsdb-server instance, and behaves as a proxy between experimenter and the actual ovsdb-server bridge.
 #
 module OmfRc::ResourceProxy::Ovs
@@ -8,7 +8,7 @@ module OmfRc::ResourceProxy::Ovs
 
   @ovs = @config['ovs']
 
-  register_proxy :virtual_openflow_switch, :create_by => :virtual_openflow_switch_factory
+  register_proxy :ovs_proxy, :create_by => :ovs_proxy_factory
 
   utility :virtual_openflow_switch_tools
 

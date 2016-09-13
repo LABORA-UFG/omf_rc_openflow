@@ -1,7 +1,7 @@
 # OMF_VERSIONS = 6.0
 
 def create_slice(flowvisor)
-  flowvisor.create(:openflow_slice, {name: "test"}) do |reply_msg|
+  flowvisor.create(:flowvisor_proxy, {name: "test"}) do |reply_msg|
     if reply_msg.success?
       slice = reply_msg.resource
 
