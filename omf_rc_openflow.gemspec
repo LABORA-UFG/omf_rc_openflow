@@ -14,5 +14,5 @@ Gem::Specification.new do |gem|
   gem.name          = "omf_rc_openflow"
   gem.require_paths = ["lib"]
   gem.version       = OmfRcOpenflow::VERSION
-  gem.add_runtime_dependency "omf_rc", "~> 6.2.4"
+  gem.add_runtime_dependency "omf_rc", "~> 6.0.0.pre"
 end
