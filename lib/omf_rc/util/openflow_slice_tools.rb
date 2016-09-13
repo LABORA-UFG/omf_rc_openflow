@@ -3,7 +3,7 @@ require 'xmlrpc/client'
 module OmfRc::Util::OpenflowSliceTools
   include OmfRc::ResourceProxyDSL
 
-  @config = YAML.load_file('/etc/omf_rc/flowvisor_conf.yaml')
+  @config = YAML.load_file('/etc/omf_rc/flowvisor_proxy_conf.yaml')
 
   @flowvisor = @config['flowvisor']
 

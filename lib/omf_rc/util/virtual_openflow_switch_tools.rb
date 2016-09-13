@@ -1,7 +1,7 @@
 module OmfRc::Util::VirtualOpenflowSwitchTools
   include OmfRc::ResourceProxyDSL
 
-  @config = YAML.load_file('/etc/omf_rc/ovs_conf.yaml')
+  @config = YAML.load_file('/etc/omf_rc/ovs_proxy_conf.yaml')
 
   @ovs = @config['ovs']
 

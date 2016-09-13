@@ -8,8 +8,8 @@
 
 die() { echo "ERROR: $@" 1>&2 ; exit 1; }
 
-RUBY_VER = $RUBY_VERSION
-RUBY_BIN_SUFFIX = $RUBY_VERSION
+RUBY_VER="2.2.3p173"
+RUBY_BIN_SUFFIX=$RUBY_VERSION
 
 if [ `id -u` != "0" ]; then
   die "This script is intended to be run as 'root'"
@@ -37,15 +37,15 @@ if [ -e /etc/profile.d/rvm.sh ]; then
 else
     # check for distro ruby when no RVM was found
     echo "No system-wide RVM installation detected"
-    ruby -v | grep RUBY_VER  > /dev/null
+    ruby -v | grep $RUBY_VER  > /dev/null
     if [[ $? != 0 ]] ; then
-        ruby -v | grep RUBY_VER  > /dev/null
+        ruby -v | grep $RUBY_VER  > /dev/null
         if [[ $? != 0 ]] ; then
-            die "Could not run system Ruby #{RUBY_VER}. No useable Ruby installation found."
+            die "Could not run system Ruby $RUBY_VER. No useable Ruby installation found."
         fi
         #RUBY_BIN_SUFFIX="2.3.1"
     fi
-    echo "Ruby #{RUBY_VER} found"
+    echo "Ruby $RUBY_VER found"
     gem$RUBY_BIN_SUFFIX list | grep omf_rc_openflow  > /dev/null
     if [[ $? != 0 ]] ; then
         die "The omf_rc_openflow gem is not installed"
