@@ -8,8 +8,8 @@
 
 die() { echo "ERROR: $@" 1>&2 ; exit 1; }
 
-RUBY_VER = RUBY_VERSION
-RUBY_BIN_SUFFIX = RUBY_VERSION
+RUBY_VER = $RUBY_VERSION
+RUBY_BIN_SUFFIX = $RUBY_VERSION
 
 if [ `id -u` != "0" ]; then
   die "This script is intended to be run as 'root'"
@@ -46,9 +46,9 @@ else
         #RUBY_BIN_SUFFIX="2.3.1"
     fi
     echo "Ruby #{RUBY_VER} found"
-    gem$RUBY_BIN_SUFFIX list | grep openflow_rcs  > /dev/null
+    gem$RUBY_BIN_SUFFIX list | grep omf_rc_openflow  > /dev/null
     if [[ $? != 0 ]] ; then
-        die "The openflow_rcs gem is not installed"
+        die "The omf_rc_openflow gem is not installed"
     fi
 fi
 
