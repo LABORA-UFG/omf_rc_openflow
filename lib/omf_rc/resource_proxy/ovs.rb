@@ -1,7 +1,7 @@
 # This resource is created from the parent :virtual_openflow_switch_factory resource.
 # It is related with a bridge of an ovsdb-server instance, and behaves as a proxy between experimenter and the actual ovsdb-server bridge.
 #
-module OmfRc::ResourceProxy::VirtualOpenflowSwitch
+module OmfRc::ResourceProxy::Ovs
   include OmfRc::ResourceProxyDSL
 
   @config = YAML.load_file('/etc/omf_rc/ovs_conf.yaml')

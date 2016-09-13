@@ -1,6 +1,6 @@
 # This resourse is related with a flowvisor instance and behaves as a proxy between experimenter and flowvisor.
 #
-module OmfRc::ResourceProxy::OpenflowSliceFactory
+module OmfRc::ResourceProxy::FlowvisorFactory
   include OmfRc::ResourceProxyDSL
 
   @config = YAML.load_file('/etc/omf_rc/flowvisor_conf.yaml')

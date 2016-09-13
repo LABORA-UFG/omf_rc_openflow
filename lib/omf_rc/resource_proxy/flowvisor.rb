@@ -1,7 +1,7 @@
 # This resource is created from the parent :openflow_slice_factory resource.
 # It is related with a slice of a flowvisor instance, and behaves as a proxy between experimenter and the actual flowvisor slice.
 #
-module OmfRc::ResourceProxy::OpenflowSlice
+module OmfRc::ResourceProxy::Flowvisor
   include OmfRc::ResourceProxyDSL
 
   @config = YAML.load_file('/etc/omf_rc/flowvisor_conf.yaml')

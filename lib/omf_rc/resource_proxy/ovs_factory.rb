@@ -1,6 +1,6 @@
 # This resourse is related with an ovsdb-server (interface of an OVSDB database) and behaves as a proxy between experimenter and this.
 #
-module OmfRc::ResourceProxy::VirtualOpenflowSwitchFactory
+module OmfRc::ResourceProxy::OvsFactory
   include OmfRc::ResourceProxyDSL
 
   @config = YAML.load_file('/etc/omf_rc/ovs_conf.yaml')
