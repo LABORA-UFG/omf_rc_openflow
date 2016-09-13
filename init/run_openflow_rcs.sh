@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Startup wrapper for the openflow_rcs
+# Startup wrapper for the omf_rc_opeflow
 # detects system-wide RVM installations & Ruby from distro packages
 
 # system-wide RVM must be installed using
@@ -30,9 +30,9 @@ if [ -e /etc/profile.d/rvm.sh ]; then
     if [[ $? != 0 ]] ; then
         die "Could not run Ruby #{RUBY_VER}"
     fi
-    gem list | grep openflow_rcs  > /dev/null
+    gem list | grep omf_rc_opeflow  > /dev/null
     if [[ $? != 0 ]] ; then
-        die "The openflow_rcs gem is not installed in the 'omf' gemset"
+        die "The omf_rc_opeflow gem is not installed in the 'omf' gemset"
     fi
 else
     # check for distro ruby when no RVM was found
@@ -68,8 +68,11 @@ case "$1" in
         die "could not find ovs_proxy executable"
     fi
     ;;
-*) echo "Starting run_proxies"
-    die "could not find run_proxies executable"
+*) echo "Starting run_openflow_proxies"
+    EXEC=`which run_openflow_proxies`
+    if [[ $? != 0 ]] ; then
+        die "could not find run_openflow_proxies executable"
+    fi
     ;;
 esac
 
