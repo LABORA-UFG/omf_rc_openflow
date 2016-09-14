@@ -7,7 +7,7 @@ module OmfRc::ResourceProxy::FlowvisorFactory
 
   @config = YAML.load_file('/etc/omf_rc/flowvisor_proxy_conf.yaml')
 
-  @flowvisor = @config[:flowvisor]
+  @flowvisor = (@config[:flowvisor].is_a? Hash) ? Hashie::Mash.new(@config[:flowvisor]) : @config[:flowvisor]
 
   register_proxy :flowvisor_proxy_factory
 
