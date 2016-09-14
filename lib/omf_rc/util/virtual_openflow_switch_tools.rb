@@ -5,7 +5,7 @@ module OmfRc::Util::VirtualOpenflowSwitchTools
 
   @config = YAML.load_file('/etc/omf_rc/ovs_proxy_conf.yaml')
 
-  @ovs = @config['ovs']
+  @ovs = @config[:ovs]
 
   # Internal function that returns a hash result of the json-request to the ovsdb-server or the ovs-switchd instances
   work :ovs_connection do |resource, target, arguments|

@@ -7,7 +7,7 @@ module OmfRc::ResourceProxy::OvsFactory
 
   @config = YAML.load_file('/etc/omf_rc/ovs_proxy_conf.yaml')
 
-  @ovs = @config['ovs']
+  @ovs = @config[:ovs]
 
   $UUID = ""
 
@@ -64,7 +64,7 @@ module OmfRc::ResourceProxy::OvsFactory
 
   # A new resource uses the default connection arguments (ip adress, port, socket, etc) to connect with a ovsdb-server instance
   hook :before_ready do |resource|
-    @ovs = @config['ovs']
+    @ovs = @config[:ovs]
   end
 
 

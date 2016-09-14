@@ -6,7 +6,7 @@ module OmfRc::Util::OpenflowSliceTools
 
   @config = YAML.load_file('/etc/omf_rc/flowvisor_proxy_conf.yaml')
 
-  @flowvisor = @config['flowvisor']
+  @flowvisor = @config[:flowvisor]
 
   # Parts of the regular expression that describes a flow entry for flowvisor
   FLOWVISOR_FLOWENTRY_REGEXP_DEVIDED = [

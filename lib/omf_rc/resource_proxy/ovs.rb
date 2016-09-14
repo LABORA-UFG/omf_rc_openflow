@@ -8,7 +8,7 @@ module OmfRc::ResourceProxy::Ovs
 
   @config = YAML.load_file('/etc/omf_rc/ovs_proxy_conf.yaml')
 
-  @ovs = @config['ovs']
+  @ovs = @config[:ovs]
 
   register_proxy :ovs_proxy, :create_by => :ovs_proxy_factory
 
