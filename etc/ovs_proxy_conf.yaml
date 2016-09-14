@@ -17,6 +17,8 @@
 #testbed domain (resources with other domains will be ignored unless if this has the value 'ALL')
 :testbedDomain: omf:testserver
 
+:uid: <%= Socket.gethostname %>-ovs
+
 #The default arguments of the communication between this resource and the ovsdb-server
 :ovs:
   :ovsdb_server_host: "localhost"

@@ -22,6 +22,8 @@
 #testbed domain (resources with other domains will be ignored unless if this has the value 'ALL')
 :testbedDomain: omf:testserver
 
+:uid: <%= Socket.gethostname %>-fw
+
 #The default arguments of the communication between this resource and the flowvisor instance
 :flowvisor:
   #The version of the flowvisor that this resource is able to control

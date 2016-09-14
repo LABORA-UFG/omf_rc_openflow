@@ -62,13 +62,14 @@ module OmfRc::ResourceProxy::OvsFactory
 
   # A new resource uses the default connection arguments (ip adress, port, socket, etc) to connect with a ovsdb-server instance
   hook :before_ready do |resource|
-    @ovs = OVS_CONNECTION_DEFAULTS
+    @ovs = @config['ovs']
   end
 
 
   # Configures the ovsdb-server connection arguments (ip adress, port, socket, etc)
   configure :ovs_connection do |resource, ovs_connection_args|
     raise "Connection with a new ovsdb-server instance is not allowed if there exist created switches" if !resource.children.empty?
+    debug "OVS_TYPE = #{@ovs.class}"
     @ovs.update(ovs_connection_args)
   end
 

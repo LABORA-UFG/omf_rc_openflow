@@ -28,7 +28,7 @@ module OmfRc::ResourceProxy::FlowvisorFactory
 
   # A new resource uses the default connection arguments (ip adress, port, etc) to connect with a flowvisor instance
   hook :before_ready do |resource|
-    resource.property.flowvisor_connection_args = FLOWVISOR_CONNECTION_DEFAULTS
+    resource.property.flowvisor_connection_args = @flowvisor
   end
 
 

@@ -8,88 +8,32 @@ require 'omf_rc/resource_factory'
 require 'omf_rc_openflow'
 
 $stdout.sync = true
-options = {}
-executable_name = File.basename($PROGRAM_NAME)
-oml_enabled = false
+
+@config = YAML.load_file('/etc/omf_rc/flowvisor_proxy_conf.yaml')
+
+@pubsub = @config[:pubsub]
+
 gem_version = Gem::Specification.find_by_name('omf_rc_openflow').version.to_s
 
-begin
-  oml_enabled = OML4R::init(ARGV, :appName => executable_name) do |opts|
-    opts.banner = "usage: #{executable_name} [options]"
+OmfCommon::Measure.enable if @config[:oml_enabled]
 
-    opts.on("-c CONFIGFILE", "Configuration File") do |file|
-      options[:configfile] = file
-    end
+opts = {
+    communication: {
+        url:  "#{@pubsub[:protocol]}://#{@pubsub[:username]}:#{@pubsub[:password]}@#{@pubsub[:server]}",
+    }
+}
 
-    opts.on("-a ADVANCED_CONFIGFILE", "Advanced Configuration File") do |file|
-      options[:advanced_configfile] = file
-    end
-
-    opts.on("-u URI", "Communication URI (xmpp://user:password@domain)") do |uri|
-      options[:uri] = uri
-    end
-
-    opts.on("-e ENVIRONMENT", "Environment (development, production ...)") do |environment|
-      options[:environment] = environment
-    end
-
-    opts.on("-i UID", "UID of the resource, also becomes the pubsub topic of the resource, default to hostname") do |uid|
-      options[:uid] = uid
-    end
-  end
-rescue => e
-  # Right now OML4R does not raise proper exceptions :(
-  # OML4R requires --oml-noop to be set if we want to run without doing any
-  # measurements... this is too restrictive here, we want to run without OML
-  # if no OML parameters were set and this even if --oml-noop is not set.
-  if e.message.include?('OML4R: Missing values for parameters :expID ')
-    puts "Warning: Missing some OML options to instrument this RC, so it will "+
-      "run without instrumentation. (see --oml-help)"
-  else
-    puts e.message
-    exit(1)
-  end
-end
-
-if !options[:configfile].nil?
-  cfg_options = YAML.load(ERB.new(File.read(options[:configfile])).result)
-  options = cfg_options.merge(options)
-end
-
-options[:uid] ||=`hostname`.chomp
-
-OmfCommon::Measure.enable if oml_enabled
-
-options[:environment] ||= :development
-
-if options[:uri]
-  common_options = { communication: { url: options[:uri] } }
-else
-  common_options = {}
-end
-
-if !options[:advanced_configfile].nil?
-  a_cfg_options = (YAML.load_file(options[:advanced_configfile]))
-  common_options = a_cfg_options.merge(common_options)
-end
-
-unless common_options[:communication] && common_options[:communication][:url]
+unless opts[:communication] && opts[:communication][:url]
   puts "Error: Missing parameters to connect to a PubSub Server (see --help)"
   exit(1)
 end
 
-resource_options = {
-  uid: options[:uid]
-}
-
-#OmfRc::ResourceFactory.load_default_resource_proxies
-
-OmfCommon.init(options[:environment].to_sym, common_options) do |el|
-  info "Starting OMF Resource Controller for OpenFlow Slice factory (FlowVisor) version '#{gem_version}'"
+OmfCommon.init(@config[:operationMode], opts) do |el|
+  info "Starting OMF Resource Controller for FlowVisor factory version '#{gem_version}'"
 
   OmfCommon.comm.on_connected do |comm|
-    info "Connected as #{comm.jid}" if comm.jid
-    res = OmfRc::ResourceFactory.create(:flowvisor_proxy_factory, resource_options)
+    info "CM Factory >> Connected to #{@pubsub[:protocol].upcase} server"
+    res = OmfRc::ResourceFactory.create(:flowvisor_proxy_factory, {uid: @config[:uid]})
 
     comm.on_interrupted { res.disconnect }
   end
