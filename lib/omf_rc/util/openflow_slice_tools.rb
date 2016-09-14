@@ -1,4 +1,5 @@
 require 'xmlrpc/client'
+require 'yaml'
 
 module OmfRc::Util::OpenflowSliceTools
   include OmfRc::ResourceProxyDSL

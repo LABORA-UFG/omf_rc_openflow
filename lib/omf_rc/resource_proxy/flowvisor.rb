@@ -1,6 +1,8 @@
 # This resource is created from the parent :flowvisor_proxy_factory resource.
 # It is related with a slice of a flowvisor instance, and behaves as a proxy between experimenter and the actual flowvisor slice.
 #
+require 'yaml'
+
 module OmfRc::ResourceProxy::Flowvisor
   include OmfRc::ResourceProxyDSL
 

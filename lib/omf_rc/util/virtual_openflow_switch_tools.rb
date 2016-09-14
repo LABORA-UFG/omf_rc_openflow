@@ -1,3 +1,5 @@
+require 'yaml'
+
 module OmfRc::Util::VirtualOpenflowSwitchTools
   include OmfRc::ResourceProxyDSL
 

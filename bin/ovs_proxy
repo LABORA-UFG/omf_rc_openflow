@@ -2,6 +2,7 @@
 
 require 'optparse'
 require 'erb'
+require 'yaml'
 
 require 'omf_rc'
 require 'omf_rc/resource_factory'

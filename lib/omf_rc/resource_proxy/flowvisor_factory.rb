@@ -1,5 +1,7 @@
 # This resourse is related with a flowvisor instance and behaves as a proxy between experimenter and flowvisor.
 #
+require 'yaml'
+
 module OmfRc::ResourceProxy::FlowvisorFactory
   include OmfRc::ResourceProxyDSL
 

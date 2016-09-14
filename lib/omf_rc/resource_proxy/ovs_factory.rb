@@ -1,5 +1,7 @@
 # This resourse is related with an ovsdb-server (interface of an OVSDB database) and behaves as a proxy between experimenter and this.
 #
+require 'yaml'
+
 module OmfRc::ResourceProxy::OvsFactory
   include OmfRc::ResourceProxyDSL
 

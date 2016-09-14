@@ -1,6 +1,8 @@
 # This resource is created from the parent :ovs_proxy_factory resource.
 # It is related with a bridge of an ovsdb-server instance, and behaves as a proxy between experimenter and the actual ovsdb-server bridge.
 #
+require 'yaml'
+
 module OmfRc::ResourceProxy::Ovs
   include OmfRc::ResourceProxyDSL
 
