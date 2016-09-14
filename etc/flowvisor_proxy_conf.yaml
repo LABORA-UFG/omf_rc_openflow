@@ -1,9 +1,9 @@
 #details to be used for the connection to the pubsub server
 :pubsub:
-  :protocol: xmpp
-  :username: cm_proxy
-  :password: pw
-  :server: localhost
+  :protocol: amqp
+  :username: guest
+  :password: lab251
+  :server: 10.16.88.5
 #x509 certificates to be used by cm_proxy
 :auth:
   :root_cert_dir: ~/.omf/trusted_roots

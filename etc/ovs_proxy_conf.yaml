@@ -1,9 +1,9 @@
 #pubsub details
 :pubsub:
-  :protocol: xmpp
-  :username: frisbee_proxy
-  :password: pw
-  :server: localhost
+  :protocol: amqp
+  :username: guest
+  :password: lab251
+  :server: 10.16.88.5
 
 # URL for the rest interface of the broker
 :broker_url: https://localhost:8001
