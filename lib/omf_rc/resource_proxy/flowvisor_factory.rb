@@ -13,7 +13,6 @@ module OmfRc::ResourceProxy::FlowvisorFactory
 
   utility :openflow_slice_tools
 
-
   # Checks if the created child is an :openflow_slice resource and passes the connection arguments that are essential for the connection with flowvisor instance
   hook :before_create do |resource, type, opts|
     if type.to_sym != :flowvisor_proxy
@@ -22,7 +21,7 @@ module OmfRc::ResourceProxy::FlowvisorFactory
       raise "The created slice must be configured with a name"
     end
     #opts = Hashie::Mash.new(opts)
-    resource.flowvisor_connection.call("api.createSlice", opts[:name].to_s, *SLICE_DEFAULTS.values)
+    resource.flowvisor_connection.call("api.createSlice", opts[:name].to_s, *@config[:slice].values)
     opts[:property] ||= Hashie::Mash.new
     opts[:property].provider = ">> #{resource.uid}"
     opts[:property].flowvisor_connection_args = resource.property.flowvisor_connection_args
