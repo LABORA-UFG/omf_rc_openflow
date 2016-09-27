@@ -57,13 +57,13 @@ EXEC=""
 case "$1" in
 
 1)  echo "Starting flowvisor_proxy"
-    EXEC=`which omf_rc_openflow_slice_factory`
+    EXEC=`which flowvisor_proxy`
     if [[ $? != 0 ]] ; then
         die "could not find flowvisor_proxy executable"
     fi
     ;;
 2)  echo "Starting ovs_proxy"
-    EXEC=`which omf_rc_virtual_openflow_switch_factory`
+    EXEC=`which ovs_proxy`
     if [[ $? != 0 ]] ; then
         die "could not find ovs_proxy executable"
     fi
