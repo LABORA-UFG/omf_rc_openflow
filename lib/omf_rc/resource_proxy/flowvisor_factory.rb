@@ -19,9 +19,14 @@ module OmfRc::ResourceProxy::FlowvisorFactory
       raise "This resource doesn't create resources of type "+type
     elsif opts[:name] == nil
       raise "The created slice must be configured with a name"
+    elsif opts[:controller_url] == nil
+      raise "You must supply the controller URL for this slice"
     end
+    
     #opts = Hashie::Mash.new(opts)
-    resource.flowvisor_connection.call("api.createSlice", opts[:name].to_s, *@config[:slice].values)
+    resource.flowvisor_connection.call("api.createSlice", opts[:name].to_s,
+                                       @config[:slice][:passwd], opts[:controller_url].to_s,
+                                       @config[:slice][:email])
     opts[:property] ||= Hashie::Mash.new
     opts[:property].provider = ">> #{resource.uid}"
     opts[:property].flowvisor_connection_args = resource.property.flowvisor_connection_args

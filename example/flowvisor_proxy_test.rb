@@ -1,7 +1,7 @@
 # OMF_VERSIONS = 6.0
 
 def create_slice(flowvisor)
-  flowvisor.create(:flowvisor_proxy, {name: "test"}) do |reply_msg|
+  flowvisor.create(:flowvisor_proxy, {name: "test", controller_url: "tcp:172.168.1.2:6633"}) do |reply_msg|
     if reply_msg.success?
       slice = reply_msg.resource
 

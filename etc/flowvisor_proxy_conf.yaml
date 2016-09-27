@@ -43,5 +43,4 @@
 #in the same working station with flowvisor instance
 :slice:
   :passwd: "1234"
-  :url: "tcp:172.168.1.2:6633"
   :email: "nothing@nowhere"
