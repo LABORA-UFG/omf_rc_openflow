@@ -23,9 +23,6 @@ module OmfRc::Util::OpenflowSliceTools
   # The names of the flow (or flow entry) features 
   FLOW_FEATURES = %w{device match slice actions id priority}
 
-  # The names of the flow (or flow entry) features that are specified by the "match" feature
-  FLOW_MATCH_FEATURES = %w{in_port eth_src eth_dst ip_src ip_dst}
-
   # The default features of a new flow (or flow entry)
   FLOW_DEFAULTS = {
     priority: "10",
@@ -73,11 +70,7 @@ module OmfRc::Util::OpenflowSliceTools
   end
 
   work :transformed_parameters do |resource, parameters|
-    match = []
-    FLOW_MATCH_FEATURES.each do |feature|
-      match << "#{feature}=#{parameters[feature]}" if parameters[feature]
-    end
-    match = match.join(",")
+    match = parameters[:match]
 
     result = []
     case parameters[:operation]
