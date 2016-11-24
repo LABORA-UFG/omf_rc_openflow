@@ -1,26 +1,12 @@
 #details to be used for the connection to the pubsub server
 :pubsub:
   :protocol: amqp
-  :username: guest
-  :password: lab251
-  :server: 10.16.88.5
-#x509 certificates to be used by cm_proxy
-:auth:
-  :root_cert_dir: ~/.omf/trusted_roots
-  :entity_cert: ~/.omf/cm_factory.pem
-  :entity_key: ~/.omf/cm_factory.pkey
-
-# URL for the rest interface of the broker
-:broker_url: https://localhost:8001
+  :username: testbed
+  :password: testbed
+  :server: <ip_amqp_server>
 
 #operation mode for OmfCommon.init (development, production, etc)
 :operationMode: development
-
-#testbed pubsub topic
-:testbedTopic: am_controller
-
-#testbed domain (resources with other domains will be ignored unless if this has the value 'ALL')
-:testbedDomain: omf:testserver
 
 :uid: <%= Socket.gethostname %>-fw
 

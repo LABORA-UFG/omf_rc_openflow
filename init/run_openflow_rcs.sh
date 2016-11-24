@@ -8,7 +8,19 @@
 
 die() { echo "ERROR: $@" 1>&2 ; exit 1; }
 
-RUBY_VER="2.2.3p173"
+find_ruby_version() {
+    count=0
+    for i in $(echo $(ruby --version) | tr " " "\n"); do
+        if [ $count == 1 ]; then
+            RUBY_VER=$i;
+        fi
+        ((count++))
+    done
+    echo "RUBY VERSION: "$RUBY_VER
+}
+
+find_ruby_version
+
 RUBY_BIN_SUFFIX=$RUBY_VERSION
 
 if [ `id -u` != "0" ]; then
@@ -26,13 +38,13 @@ if [ -e /etc/profile.d/rvm.sh ]; then
     # if [[ $? != 0 ]] ; then
     #     die "$RUBY_VER with gemset 'omf' is not installed in your RVM"
     # fi
-    ruby -v | grep RUBY_VER  > /dev/null
+    ruby -v | grep $RUBY_VER  > /dev/null
     if [[ $? != 0 ]] ; then
-        die "Could not run Ruby #{RUBY_VER}"
+        die "Could not run Ruby ${RUBY_VER}"
     fi
-    gem list | grep omf_rc_opeflow  > /dev/null
+    gem list | grep omf_rc_openflow  > /dev/null
     if [[ $? != 0 ]] ; then
-        die "The omf_rc_opeflow gem is not installed in the 'omf' gemset"
+        die "The omf_rc_openflow gem is not installed in the 'omf' gemset"
     fi
 else
     # check for distro ruby when no RVM was found

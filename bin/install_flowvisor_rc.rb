@@ -5,6 +5,17 @@ require 'optparse'
 options = {}
 
 optparse = OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename($PROGRAM_NAME)} [options]"
+  opts.on("-i", "--initscript", "Install init script to run the OMF RC on boot (as root)") do |i|
+    options[:init] = i
+  end
+  opts.on("-c", "--configfile", "Install config file template in /etc/omf_rc/flowvisor_proxy_conf.yaml") do |c|
+    options[:config] = c
+  end
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
   opts.on('-nc', '--no_conf', "Skip installation of configuration files") do |f|
     options[:no_conf] = true
   end
@@ -35,7 +46,6 @@ else
   puts "Installing configuration files."
   conf_files = []
   conf_files << "flowvisor_proxy_conf.yaml"
-  conf_files << "ovs_proxy_conf.yaml"
 
   conf_files.each do |file|
     puts "Copying configuration file '#{gem_root}/etc/#{file}' to '#{config_path}'."
@@ -48,11 +58,24 @@ end
 puts "Copying initialization script 'run_openflow_rcs.sh'."
 FileUtils.cp "#{gem_root}/init/run_openflow_rcs.sh", "/usr/local/bin/run_openflow_rcs.sh"
 
-FileUtils.cp "#{gem_root}/init/openflow_rcs.conf", "/etc/init/openflow_rcs.conf"
-FileUtils.cp "#{gem_root}/init/flowvisor_rc.conf", "/etc/init/flowvisor_rc.conf"
-FileUtils.cp "#{gem_root}/init/ovs_rc.conf", "/etc/init/ovs_rc.conf"
-puts "Upstart scripts has been installed."
-puts "Execute 'start openflow_rcs' to run all the proxies."
-puts "Execute 'start flowvisor_rc' to run flowvisor proxy."
-puts "Execute 'start ovs_rc' to run ovs_rc proxy."
+if options[:init]
+  puts "Detecting operating system..."
+  FileUtils.cp "#{gem_root}/init/run_openflow_rcs.sh", "/usr/local/bin/run_openflow_rcs.sh"
+  if !File.exist?("/etc/issue")
+    abort "Unknown or unsupported operating system. Cannot install init script."
+  end
+  issue = File.read("/etc/issue")
+  case issue
+    when /Ubuntu/
+      FileUtils.cp "#{gem_root}/init/ubuntu/*", "/etc/init/"
+      puts "Upstart scripts for Ubuntu has been installed. Execute 'start flowvisor_rc' to run the daemon."
+    when /Debian/
+      FileUtils.cp "#{gem_root}/init/debian", "/etc/init.d/omf_rc"
+      `update-rc.d omf_rc defaults`
+      puts "Init script for Debian has been installed. Execute '/etc/init.d/omf_flowvisor_rc start' to run the daemon."
+    else
+      abort "OS '#{issue}' is not supported. Cannot install init script."
+  end
+end
+
 puts "done."
