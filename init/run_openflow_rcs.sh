@@ -21,8 +21,6 @@ find_ruby_version() {
 
 find_ruby_version
 
-RUBY_BIN_SUFFIX=$RUBY_VERSION
-
 if [ `id -u` != "0" ]; then
   die "This script is intended to be run as 'root'"
 fi
@@ -55,10 +53,9 @@ else
         if [[ $? != 0 ]] ; then
             die "Could not run system Ruby $RUBY_VER. No useable Ruby installation found."
         fi
-        #RUBY_BIN_SUFFIX="2.3.1"
     fi
     echo "Ruby $RUBY_VER found"
-    gem$RUBY_BIN_SUFFIX list | grep omf_rc_openflow  > /dev/null
+    gem list | grep omf_rc_openflow  > /dev/null
     if [[ $? != 0 ]] ; then
         die "The omf_rc_openflow gem is not installed"
     fi
@@ -89,4 +86,4 @@ case "$1" in
 esac
 
 echo "Running $EXEC"
-exec /usr/bin/env ruby$RUBY_BIN_SUFFIX $EXEC
+exec /usr/bin/env ruby $EXEC
