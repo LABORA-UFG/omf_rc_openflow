@@ -7,7 +7,7 @@ require 'socket'
 
 require 'omf_rc'
 require 'omf_rc/resource_factory'
-require 'omf_rc_openflow'
+require 'flowvisor_rc'
 
 $stdout.sync = true
 
