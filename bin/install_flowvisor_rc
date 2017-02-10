@@ -70,7 +70,7 @@ if options[:init]
       FileUtils.cp_r "#{gem_root}/init/ubuntu/.", "/etc/init/"
       puts "Upstart scripts for Ubuntu has been installed. Execute 'start flowvisor_rc' to run the daemon."
     when /Debian/
-      FileUtils.cp "#{gem_root}/init/debian", "/etc/init.d/omf_rc"
+      FileUtils.cp_r "#{gem_root}/init/debian/.", "/etc/init.d/omf_rc"
       `update-rc.d omf_rc defaults`
       puts "Init script for Debian has been installed. Execute '/etc/init.d/omf_flowvisor_rc start' to run the daemon."
     else
