@@ -48,9 +48,9 @@ end
 puts "Copying initialization script 'run_openflow_rcs.sh'."
 FileUtils.cp "#{gem_root}/init/run_openflow_rcs.sh", "/usr/local/bin/run_openflow_rcs.sh"
 
-FileUtils.cp "#{gem_root}/init/openflow_rcs.conf", "/etc/init/openflow_rcs.conf"
-FileUtils.cp "#{gem_root}/init/flowvisor_rc.conf", "/etc/init/flowvisor_rc.conf"
-FileUtils.cp "#{gem_root}/init/ovs_rc.conf", "/etc/init/ovs_rc.conf"
+FileUtils.cp "#{gem_root}/init/ubuntu/openflow_rcs.conf", "/etc/init/openflow_rcs.conf"
+FileUtils.cp "#{gem_root}/init/ubuntu/flowvisor_rc.conf", "/etc/init/flowvisor_rc.conf"
+FileUtils.cp "#{gem_root}/init/ubuntu/ovs_rc.conf", "/etc/init/ovs_rc.conf"
 puts "Upstart scripts has been installed."
 puts "Execute 'start openflow_rcs' to run all the proxies."
 puts "Execute 'start flowvisor_rc' to run flowvisor proxy."
