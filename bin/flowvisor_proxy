@@ -36,7 +36,7 @@ OmfCommon.init(@config[:operationMode], opts) do |el|
   OmfCommon.comm.on_connected do |comm|
     info "CM Factory >> Connected to #{@pubsub[:protocol].upcase} server"
     require 'erb'
-    res = OmfRc::ResourceFactory.create(:flowvisor_proxy_factory, {uid: ERB.new(@config[:uid]).result()})
+    res = OmfRc::ResourceFactory.create(:flowvisor, {uid: ERB.new(@config[:uid]).result()})
 
     comm.on_interrupted { res.disconnect }
   end
