@@ -72,7 +72,7 @@ if options[:init]
     when /Debian/
       FileUtils.cp_r "#{gem_root}/init/debian/.", "/etc/init.d/omf_rc"
       `update-rc.d omf_rc defaults`
-      puts "Init script for Debian has been installed. Execute '/etc/init.d/omf_flowvisor_rc start' to run the daemon."
+      puts "Init script for Debian has been installed. Execute '/etc/init.d/omf_rc/omf_flowvisor_rc start' to run the daemon."
     else
       abort "OS '#{issue}' is not supported. Cannot install init script."
   end
