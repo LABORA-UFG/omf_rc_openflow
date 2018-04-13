@@ -63,7 +63,7 @@ module OmfRc::ResourceProxy::Flowvisor
   # Returns information or statistics for a device specified by the given id
   {:device_info => "getDeviceInfo", :device_stats => "getSwitchStats"}.each do |request_sym, handler_name|
     request request_sym do |resource, device|
-      resource.flowvisor_connection.call("api.#{handler_name}", device.to_s)
+      resource.flowvisor_connection.call("api.#{handler_name}", device.to_s) unless device.to_s.empty?
     end
   end
 
