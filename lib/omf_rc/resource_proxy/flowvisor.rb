@@ -23,7 +23,6 @@ module OmfRc::ResourceProxy::Flowvisor
     elsif opts[:controller_url] == nil
       raise "You must supply the controller URL for this slice"
     end
-    resource.property.flowvisor_connection_args = @flowvisor
     resource.property.slice_default_configuration = @config
 
     resource.flowvisor_connection.call("api.createSlice", opts[:name].to_s,
@@ -32,7 +31,7 @@ module OmfRc::ResourceProxy::Flowvisor
 
     opts[:property] ||= Hashie::Mash.new
     opts[:property].provider = ">> #{resource.uid}"
-    opts[:property].flowvisor_connection_args = resource.property.flowvisor_connection_args
+    opts[:flowvisor_connection_args] = @flowvisor
   end
 
   # A new resource uses the default connection arguments (ip adress, port, etc) to connect with a flowvisor instance

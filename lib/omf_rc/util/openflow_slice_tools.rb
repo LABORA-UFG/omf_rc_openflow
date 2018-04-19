@@ -29,6 +29,7 @@ module OmfRc::Util::OpenflowSliceTools
     actions:  "4"
   }
 
+  property :flowvisor_connection_args
 
   # Returns the flows (flow entries) that exist for this flowvisor
   request :flows do |resource, filter = nil|

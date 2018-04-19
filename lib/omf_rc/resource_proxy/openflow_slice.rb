@@ -8,8 +8,6 @@ module OmfRc::ResourceProxy::OpenflowSlice
 
   @config = YAML.load_file('/etc/omf_rc/flowvisor_proxy_conf.yaml')
 
-  @flowvisor = (@config[:flowvisor].is_a? Hash) ? Hashie::Mash.new(@config[:flowvisor]) : @config[:flowvisor]
-
   register_proxy :openflow_slice, :create_by => :flowvisor
 
   utility :openflow_slice_tools
@@ -40,8 +38,6 @@ module OmfRc::ResourceProxy::OpenflowSlice
   # Adds/removes a flow to this slice, specified by device, port, etc.
   configure :flows do |resource, array_parameters|
     array_parameters = [array_parameters] if !array_parameters.kind_of?(Array)
-
-    resource.property.flowvisor_connection_args = @flowvisor
 
     array_parameters.each do |parameters|
       resource.flowvisor_connection.call("api.changeFlowSpace", resource.transformed_parameters(parameters))
