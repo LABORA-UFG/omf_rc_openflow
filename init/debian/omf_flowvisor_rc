@@ -22,7 +22,6 @@ status(){
 }
 
 start(){
-    status = $(status)
         echo -n "Starting OMF Resource Controller: $NAME"
 	start-stop-daemon --start --quiet --pidfile $PIDFILE --make-pidfile --startas $DAEMON 1 2>&1 | logger -s -t omf_rc_flowvisor 2> /var/log/omf_rc_flowvisor.log &
         echo "."
