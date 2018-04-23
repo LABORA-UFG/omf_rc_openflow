@@ -17,9 +17,14 @@ PIDFILE=/var/run/$NAME.pid
 . /lib/init/vars.sh
 . /lib/lsb/init-functions
 
+status(){
+	status_of_proc -p $PIDFILE "$DAEMON" "$NAME" && exit 0 || exit $?
+}
+
 start(){
+    status = $(status)
         echo -n "Starting OMF Resource Controller: $NAME"
-	start-stop-daemon --start --quiet --pidfile $PIDFILE --make-pidfile --exec $DAEMON 1 2>&1 | logger -s -t omf_rc_flowvisor 2> /var/log/omf_rc_flowvisor.log &
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --make-pidfile --startas $DAEMON 1 2>&1 | logger -s -t omf_rc_flowvisor 2> /var/log/omf_rc_flowvisor.log &
         echo "."
 }
 
@@ -41,7 +46,7 @@ case "$1" in
  	start
 	;;
   status)
-	status_of_proc -p $PIDFILE "$DAEMON" "$NAME" && exit 0 || exit $?
+	status
 	;;
   *)
 	echo "Usage: $0 {start|stop|restart|force-reload|status}" >&2
