@@ -30,6 +30,7 @@ start(){
 stop(){
         echo -n "Stopping OMF Resource Controller: $NAME"
 	start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE
+	    rm -f $PIDFILE
         echo "."
 }
 
