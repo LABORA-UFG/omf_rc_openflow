@@ -1,6 +1,7 @@
 # This resourse is related with a flowvisor instance and behaves as a proxy between experimenter and flowvisor.
 #
 require 'yaml'
+require 'securerandom'
 
 module OmfRc::ResourceProxy::Flowvisor
   include OmfRc::ResourceProxyDSL
@@ -29,6 +30,9 @@ module OmfRc::ResourceProxy::Flowvisor
                                        @config[:slice][:passwd], opts[:controller_url].to_s,
                                        @config[:slice][:email])
 
+    if @config[:pubsub][:federate] and @config[:pubsub][:domain]
+      opts[:uid] = "fed-#{@config[:pubsub][:domain]}-#{SecureRandom.uuid}"
+    end
     opts[:property] ||= Hashie::Mash.new
     opts[:property].provider = ">> #{resource.uid}"
     opts[:flowvisor_connection_args] = @flowvisor
