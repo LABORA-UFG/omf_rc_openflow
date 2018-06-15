@@ -67,7 +67,17 @@ if options[:init]
   issue = File.read("/etc/issue")
   case issue
     when /Ubuntu/
-      FileUtils.cp_r "#{gem_root}/init/ubuntu/.", "/etc/init/"
+      #FileUtils.cp_r "#{gem_root}/init/ubuntu/.", "/etc/init/"
+      FileUtils.cp "#{gem_root}/init/ubuntu/openflow_rcs.service", "/etc/systemd/system/openflow_rcs.service"
+      FileUtils.cp "#{gem_root}/init/ubuntu/flowvisor_rc.service", "/etc/systemd/system/flowvisor_rc.service"
+      FileUtils.cp "#{gem_root}/init/ubuntu/ovs_rc.service", "/etc/systemd/system/ovs_rc.service"
+      FileUtils.chmod 0644, "/etc/systemd/system/openflow_rcs.service"
+      FileUtils.chmod 0644, "/etc/systemd/system/flowvisor_rc.service"
+      FileUtils.chmod 0644, "/etc/systemd/system/ovs_rc.service"
+      `systemctl daemon-reload` if File.exist?("/bin/systemctl")
+      `systemctl enable openflow_rcs.service` if File.exist?("/bin/systemctl")
+      `systemctl enable flowvisor_rc.service` if File.exist?("/bin/systemctl")
+      `systemctl enable ovs_rc.service` if File.exist?("/bin/systemctl")
       puts "Upstart scripts for Ubuntu has been installed. Execute 'start flowvisor_rc' to run the daemon."
     when /Debian/
       FileUtils.cp_r "#{gem_root}/init/debian/.", "/etc/init.d/"

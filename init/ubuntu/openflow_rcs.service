@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenFlow related RCs
+After=syslog.target
+
+[Service]
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Proxy for flowvisor controller
+After=openflow_rcs.service
+
+[Service]
+Type=forking
+PIDFile=/var/run/flowvisor_rc.pid
+ExecStartPre=/bin/rm -f /var/run/flowvisor_rc.pid
+ExecStart=/usr/local/bin/run_openflow_rcs.sh 1 2>&1 | logger -s -t omf_rc_flowvisor 2> /var/log/omf_rc_flowvisor.log
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Proxy for OpenvSwitch controller
+After=openflow_rcs.service
+
+[Service]
+Type=forking
+PIDFile=/var/run/ovs_rc.pid
+ExecStartPre=/bin/rm -f /var/run/ovs_rc.pid
+ExecStart=/usr/local/bin/run_openflow_rcs.sh 2 2>&1
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

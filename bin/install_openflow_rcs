@@ -48,11 +48,23 @@ end
 puts "Copying initialization script 'run_openflow_rcs.sh'."
 FileUtils.cp "#{gem_root}/init/run_openflow_rcs.sh", "/usr/local/bin/run_openflow_rcs.sh"
 
-FileUtils.cp "#{gem_root}/init/ubuntu/openflow_rcs.conf", "/etc/init/openflow_rcs.conf"
-FileUtils.cp "#{gem_root}/init/ubuntu/flowvisor_rc.conf", "/etc/init/flowvisor_rc.conf"
-FileUtils.cp "#{gem_root}/init/ubuntu/ovs_rc.conf", "/etc/init/ovs_rc.conf"
+#FileUtils.cp "#{gem_root}/init/ubuntu/openflow_rcs.conf", "/etc/init/openflow_rcs.conf"
+#FileUtils.cp "#{gem_root}/init/ubuntu/flowvisor_rc.conf", "/etc/init/flowvisor_rc.conf"
+#FileUtils.cp "#{gem_root}/init/ubuntu/ovs_rc.conf", "/etc/init/ovs_rc.conf"
+
+FileUtils.cp "#{gem_root}/init/ubuntu/openflow_rcs.service", "/etc/systemd/system/openflow_rcs.service"
+FileUtils.cp "#{gem_root}/init/ubuntu/flowvisor_rc.service", "/etc/systemd/system/flowvisor_rc.service"
+FileUtils.cp "#{gem_root}/init/ubuntu/ovs_rc.service", "/etc/systemd/system/ovs_rc.service"
+FileUtils.chmod 0644, "/etc/systemd/system/openflow_rcs.service"
+FileUtils.chmod 0644, "/etc/systemd/system/flowvisor_rc.service"
+FileUtils.chmod 0644, "/etc/systemd/system/ovs_rc.service"
+`systemctl daemon-reload` if File.exist?("/bin/systemctl")
+`systemctl enable openflow_rcs.service` if File.exist?("/bin/systemctl")
+`systemctl enable flowvisor_rc.service` if File.exist?("/bin/systemctl")
+`systemctl enable ovs_rc.service` if File.exist?("/bin/systemctl")
+
 puts "Upstart scripts has been installed."
-puts "Execute 'start openflow_rcs' to run all the proxies."
-puts "Execute 'start flowvisor_rc' to run flowvisor proxy."
-puts "Execute 'start ovs_rc' to run ovs_rc proxy."
+puts "Execute 'systemctl start openflow_rcs.service' to run all the proxies."
+puts "Execute 'systemctl start flowvisor_rc.service' to run flowvisor proxy."
+puts "Execute 'systemctl start ovs_rc.service' to run ovs_rc proxy."
 puts "done."
