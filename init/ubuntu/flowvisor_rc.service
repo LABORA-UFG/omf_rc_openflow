@@ -3,7 +3,7 @@ Description=Proxy for flowvisor controller
 After=openflow_rcs.service
 
 [Service]
-Type=forking
+Type=simple
 PIDFile=/var/run/flowvisor_rc.pid
 ExecStartPre=/bin/rm -f /var/run/flowvisor_rc.pid
 ExecStart=/bin/sh -c '/usr/local/bin/run_openflow_rcs.sh 1 2>&1 | logger -s -t omf_rc_flowvisor 2> /var/log/omf_rc_flowvisor.log'
