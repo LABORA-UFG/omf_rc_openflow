@@ -26,12 +26,20 @@ module OmfRc::ResourceProxy::Flowvisor
     end
     resource.property.slice_default_configuration = @config
 
-    resource.flowvisor_connection.call("api.createSlice", opts[:name].to_s,
-                                       @config[:slice][:passwd], opts[:controller_url].to_s,
-                                       @config[:slice][:email])
+    slices = resource.flowvisor_connection.call("api.listSlices")
 
+    debug "Existing slices: #{slices}"
+
+    unless slices.include? opts[:name].to_s
+      #TODO verify slice name to remove dot character or raise an exception if the name has dots
+      resource.flowvisor_connection.call("api.createSlice", opts[:name].to_s,
+                                         @config[:slice][:passwd], opts[:controller_url].to_s,
+                                         @config[:slice][:email])
+    end
+
+    opts[:uid] = opts[:name].to_s
     if @config[:pubsub][:federate] and @config[:pubsub][:domain]
-      opts[:uid] = "fed-#{@config[:pubsub][:domain]}-#{SecureRandom.uuid}"
+      opts[:uid] = "fed-#{@config[:pubsub][:domain]}-#{opts[:uid]}"
     end
     opts[:property] ||= Hashie::Mash.new
     opts[:property].provider = ">> #{resource.uid}"
